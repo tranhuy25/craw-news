@@ -3,7 +3,7 @@ import { Document } from 'mongoose';
 
 export type NewsDocument = News & Document;
 
-@Schema()
+@Schema({collection :News.name})
 export class News {
   @Prop()
   title: string;
