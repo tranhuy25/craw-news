@@ -13,6 +13,9 @@ export class News {
 
   @Prop()
   content: string;
+  
+  @Prop()
+  createdAt: Date;
 }
 
 export const NewsSchema = SchemaFactory.createForClass(News);
