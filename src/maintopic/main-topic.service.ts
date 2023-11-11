@@ -2,36 +2,40 @@
 import { Injectable } from '@nestjs/common';
 import { Model } from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
-import { MainTopic } from './main-topic.schema';
+import { mainTopics } from './main-topic.schema';
 import fetch from 'node-fetch-commonjs';
 import * as cheerio from 'cheerio';
+import { DB_MAINTOPIC } from './constants';
 
 @Injectable()
 export class MainTopicService {
-    constructor(@InjectModel('MainTopic')  private readonly mainTopicModel: Model<MainTopic>) { }
+    constructor(@InjectModel(DB_MAINTOPIC)  private readonly mainTopicModel: Model<mainTopics>) { }
 
     async crawlAndSaveMainTopics() {
-        const url = 'http://vnexpress.net'; 
-
+        const url = 'https://vnexpress.net/'; 
+        console.log(mainTopics.name)
         try {
             const response = await fetch(url);
             const html = await response.text();
             const $ = cheerio.load(html);
 
-            const mainTopics = [];
-// git init---- git add . ----- git commit -m "basic"  ---- git commit -m "basic"-----git push -uf origin demo
-            $('parent').each((_index, element) => {
+            const mainTopic = [];
+            $('.parent li a').each((_index, element) => {
                 const name = $(element).text();
                 const link = $(element).attr('href');
 
-                mainTopics.push({ name, link });
+                console.log("???1", name,link) 
+
+                mainTopic.push({ name, link });
             });
-
-            await this.mainTopicModel.create(mainTopics);
-
+            const dto=await this.mainTopicModel.insertMany(mainTopic);
+            console.log(dto)
             console.log('Đã crawl và lưu chủ đề lớn thành công!');
         } catch (error) {
             console.error('Lỗi: ', error);
         }
+    }
+    async find (){
+        return this.mainTopicModel.find().exec()
     }
 }

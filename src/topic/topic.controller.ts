@@ -8,7 +8,7 @@ export class TopicController {
 
     @Get('crawl-and-save')
     async crawlAndSaveNews() {
-        await this.topicService.crawlAndSaveTopics();
+        // await this.topicService.crawlAndSaveTopics();
         return { message: 'Crawl và lưu tin tức thành công!' };
     }
 }

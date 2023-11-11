@@ -3,18 +3,19 @@ import { InjectModel } from '@nestjs/mongoose';
 import * as cheerio from 'cheerio';
 import { Model } from 'mongoose';
 import fetch from 'node-fetch-commonjs';
-import { News } from './news.schema';
-import { Topic } from 'src/topic/topic.schema';
+import { news } from './news.schema';
+import { DB_NEW } from './constants';
+import { TopicService } from 'src/topic/topic.service';
 
 @Injectable()
 export class NewsService {
     constructor(
-        @InjectModel('News')  private readonly newsModel: Model<News>,
-        @InjectModel('Topic') private readonly topicModel: Model<Topic>,
+        @InjectModel(DB_NEW)  private readonly newsModel: Model<news>,
+                   private readonly topicService : TopicService
     ) { }
 
     async crawlAndSaveNews() {
-        const topics = await this.topicModel.find().exec();
+        const topics = await this.topicService.find();
 
         for (const topic of topics) {
             const url = topic.link;
@@ -30,6 +31,7 @@ export class NewsService {
                     const title = $(element).find('title-news').text();
                     const createdAt = new Date(); 
 
+                    console.log("???3", title) 
                     newsList.push({
                         title,
                         createdAt,

@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { Cron } from '@nestjs/schedule';
+import { Cron, CronExpression } from '@nestjs/schedule';
 import { MainTopicService } from './main-topic.service';
 
 
@@ -7,7 +7,7 @@ import { MainTopicService } from './main-topic.service';
 export class CronJobService {
   constructor(private maintopicService: MainTopicService) {}
 
-  @Cron('0 * * * * *')
+  @Cron(CronExpression.EVERY_10_SECONDS)
   handleCron() {
     const currentTime = new Date().toLocaleTimeString();
     console.log(`Cron Job is running at ${currentTime}`);
