@@ -2,7 +2,7 @@ import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { DB_MAINTOPIC } from './constants';
 
 @Schema({collection :DB_MAINTOPIC})
-export class mainTopics {
+export class mainTopic {
   @Prop()
   name: string;
 
@@ -10,4 +10,4 @@ export class mainTopics {
   link: string;
 
 }
-export const MainTopicSchema = SchemaFactory.createForClass(mainTopics);
+export const MainTopicSchema = SchemaFactory.createForClass(mainTopic);

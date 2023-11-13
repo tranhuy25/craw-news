@@ -10,8 +10,8 @@ import { TopicService } from 'src/topic/topic.service';
 @Injectable()
 export class NewsService {
     constructor(
-        @InjectModel(DB_NEW)  private readonly newsModel: Model<news>,
-                   private readonly topicService : TopicService
+        @InjectModel(DB_NEW) private readonly newsModel: Model<news>,
+        private readonly topicService: TopicService
     ) { }
 
     async crawlAndSaveNews() {
@@ -27,24 +27,30 @@ export class NewsService {
 
                 const newsList = [];
 
-                $('item-news thumb-left item-news-common').each((_index, element) => {
-                    const title = $(element).find('title-news').text();
-                    const createdAt = new Date(); 
+                $('.thumb-art a').each((_index, element) => {
+                    const title = $(element).text();
+                    const link = `https://vnexpress.net` + $(element).attr('href');
+                    const createdAt = new Date();
 
-                    console.log("???3", title) 
+                    console.log("???3", title)
                     newsList.push({
                         title,
+                        link,
                         createdAt,
                         topic: topic._id, // Liên kết tin tức với chủ đề con
                     });
                 });
 
-                await this.newsModel.create(newsList);
+                const dto = await this.newsModel.insertMany(newsList);
+                console.log(dto)
 
                 console.log(`Đã crawl và lưu tin tức của chủ đề ${topic.name} thành công!`);
             } catch (error) {
                 console.error('Lỗi: ', error);
             }
         }
+    }
+    async find (){
+        return this.newsModel.find().exec()
     }
 }

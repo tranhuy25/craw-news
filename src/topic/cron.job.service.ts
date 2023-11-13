@@ -10,6 +10,6 @@ export class CronJobService {
   handleCron() {
     const currentTime = new Date().toLocaleTimeString();
     console.log(`Cron Job is running at ${currentTime}`);
-      //  return this.topicService.crawlAndSaveTopics();
+       return this.topicService.crawlAndSaveTopics();
   }
 }

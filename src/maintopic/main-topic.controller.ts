@@ -1,4 +1,3 @@
-// main-topic.controller.ts
 import { Controller, Get } from '@nestjs/common';
 import { MainTopicService } from './main-topic.service';
 

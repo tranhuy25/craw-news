@@ -7,7 +7,6 @@ import { Maintopicmodule } from './maintopic/main-topic.module';
 import { Topicmodule } from './topic/topic.module';
 import { NewsModule } from './news/news.module';
 
-
 @Module({
   imports: [MongooseModule.forRoot('mongodb://127.0.0.1:27017/tin_tuc'),Maintopicmodule ,NewsModule,Topicmodule, ScheduleModule.forRoot()],
   controllers: [AppController],

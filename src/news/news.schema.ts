@@ -5,14 +5,19 @@ import { Types } from 'mongoose';
 
 @Schema({collection :DB_NEW})
 export class news {
+
   @Prop()
   title: string;
 
   @Prop()
   createdAt: Date;
 
-  @Prop({ type: Types.ObjectId, ref: 'topics' }) // Thêm trường dữ liệu topic
-  topic: Types.ObjectId; // Sử dụng kiểu ObjectId cho trường topic
+  @Prop()
+  link:string;
+
+  @Prop({ type: Types.ObjectId, ref: 'topics' }) 
+  topic: Types.ObjectId;
+    static link: any;
 }
 
 export const NewsSchema = SchemaFactory.createForClass(news);
