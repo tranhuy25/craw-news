@@ -10,10 +10,10 @@ export class news {
   title: string;
 
   @Prop()
-  createdAt: Date;
+  link:string;
 
   @Prop()
-  link:string;
+  createdAt: Date;
 
   @Prop({ type: Types.ObjectId, ref: 'topics' }) 
   topic: Types.ObjectId;
