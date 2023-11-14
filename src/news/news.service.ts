@@ -19,7 +19,7 @@ export class NewsService {
 
         for (const topic of topics) {
             const url = topic.link;
-
+            console.log("???")
             try {
                 const response = await fetch(url);
                 const html = await response.text();
@@ -37,7 +37,7 @@ export class NewsService {
                         title,
                         link,
                         createdAt,
-                        topic: topic._id, // Liên kết tin tức với chủ đề con
+                        topic: topic._id, 
                     });
                 });
 
@@ -49,8 +49,5 @@ export class NewsService {
                 console.error('Lỗi: ', error);
             }
         }
-    }
-    async find (){
-        return this.newsModel.find().exec()
     }
 }

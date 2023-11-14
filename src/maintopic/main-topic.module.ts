@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
-import { MainTopicSchema, mainTopics } from './main-topic.schema';
+import { MainTopicSchema } from './main-topic.schema';
 import { MainTopicService } from './main-topic.service';
 import { MainTopicController } from './main-topic.controller';
 import { CronJobService } from './cron.job.service';

@@ -2,17 +2,17 @@
 import { Injectable } from '@nestjs/common';
 import { Model } from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
-import { mainTopic } from './main-topic.schema';
+import { mainTopics } from './main-topic.schema';
 import fetch from 'node-fetch-commonjs';
 import * as cheerio from 'cheerio';
 import { DB_MAINTOPIC } from './constants';
 
 @Injectable()
 export class MainTopicService {
-    constructor(@InjectModel(DB_MAINTOPIC)  private readonly mainTopicModel: Model<mainTopic>) { }
+    constructor(@InjectModel(DB_MAINTOPIC) private readonly mainTopicModel: Model<mainTopics>) { }
 
     async crawlAndSaveMainTopics() {
-        const url = 'https://vnexpress.net/'; 
+        const url = 'https://vnexpress.net/';
 
         try {
             const response = await fetch(url);
@@ -22,24 +22,23 @@ export class MainTopicService {
             const mainTopic = [];
             $('.parent li a').each((_index, element) => {
                 const Dtoname = $(element).text();
-                const name = Dtoname.replace(/\n/g,'').trim();
+                const name = Dtoname.replace(/\n\n+/g, '').trim();
                 const DtoLink = 'https://vnexpress.net';
-                const link = DtoLink+$(element).attr('href');
-                
-                console.log("???1", name,link) 
+                const link = DtoLink + $(element).attr('href');
+
+                console.log("???1", name, link)
 
                 mainTopic.push({ name, link });
             });
-            const dto=await this.mainTopicModel.insertMany(mainTopic);
-            
-            console.log(dto)
+
+            await this.mainTopicModel.create(mainTopic);
 
             console.log('Đã crawl và lưu chủ đề lớn thành công!');
         } catch (error) {
             console.error('Lỗi: ', error);
         }
     }
-    async find (){
+    async find() {
         return this.mainTopicModel.find().exec()
     }
 }

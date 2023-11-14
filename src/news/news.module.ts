@@ -6,13 +6,11 @@ import { NewsController } from './news.controller';
 import { NewsSchema } from './news.schema';
 import { NewsService } from './news.service';
 import { DB_NEW } from './constants';
-import { DB_TOPIC } from 'src/topic/constants';
-import { TopicSchema } from 'src/topic/topic.schema';
 import { Topicmodule } from 'src/topic/topic.module';
 
 @Module({
-    imports: [MongooseModule.forFeature([{ name: DB_NEW, schema: NewsSchema } ]),Topicmodule],
+    imports: [MongooseModule.forFeature([{ name: DB_NEW, schema: NewsSchema }]), Topicmodule],
     controllers: [NewsController],
-    providers: [NewsService,CronJobService,],
+    providers: [NewsService, CronJobService,],
 })
-export class NewsModule {}
+export class NewsModule { }
