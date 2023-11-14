@@ -17,7 +17,7 @@ export class news {
 
   @Prop({ type: Types.ObjectId, ref: 'topics' }) 
   topic: Types.ObjectId;
-    static link: any;
+
 }
 
 export const NewsSchema = SchemaFactory.createForClass(news);

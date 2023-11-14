@@ -19,7 +19,7 @@ export class NewsService {
 
         for (const topic of topics) {
             const url = topic.link;
-            console.log("???")
+            console.log("???3")
             try {
                 const response = await fetch(url);
                 const html = await response.text();
@@ -28,11 +28,11 @@ export class NewsService {
                 const newsList = [];
 
                 $('.thumb-art a').each((_index, element) => {
-                    const title = $(element).text();
-                    const link = `https://vnexpress.net` + $(element).attr('href');
+                    const title = $(element).text().replace(/\n\n+/g, '').trim();;
+                    const link = $(element).attr('href').replace(/,/, '');;
                     const createdAt = new Date();
 
-                    console.log("???3", title)
+                    console.log("???3", title,link)
                     newsList.push({
                         title,
                         link,
@@ -42,6 +42,7 @@ export class NewsService {
                 });
 
                 const dto = await this.newsModel.insertMany(newsList);
+                
                 console.log(dto)
 
                 console.log(`Đã crawl và lưu tin tức của chủ đề ${topic.name} thành công!`);
@@ -49,5 +50,8 @@ export class NewsService {
                 console.error('Lỗi: ', error);
             }
         }
+    }
+    async find() {
+        return await this.newsModel.find().exec()
     }
 }

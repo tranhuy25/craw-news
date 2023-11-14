@@ -21,24 +21,22 @@ export class MainTopicService {
 
             const mainTopic = [];
             $('.parent li a').each((_index, element) => {
-                const Dtoname = $(element).text();
-                const name = Dtoname.replace(/\n\n+/g, '').trim();
+                const name = $(element).text().replace(/\n\n+/g, '').trim();
                 const DtoLink = 'https://vnexpress.net';
-                const link = DtoLink + $(element).attr('href');
+                const link = DtoLink+$(element).attr('href').replace(/,/, '');
 
-                console.log("???1", name, link)
+                console.log("???1",name,link)
 
                 mainTopic.push({ name, link });
             });
 
-            await this.mainTopicModel.create(mainTopic);
-
+            await this.mainTopicModel.insertMany(mainTopic);
             console.log('Đã crawl và lưu chủ đề lớn thành công!');
         } catch (error) {
             console.error('Lỗi: ', error);
         }
     }
     async find() {
-        return this.mainTopicModel.find().exec()
+        return await this.mainTopicModel.find().exec()
     }
 }
