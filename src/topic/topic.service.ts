@@ -11,17 +11,17 @@ import { DB_TOPIC } from './constants';
 export class TopicService {
     constructor(
         @InjectModel(DB_TOPIC) private readonly topicModel: Model<topics>,
-        private readonly topicservice: MainTopicService
+        private readonly maintopicservice: MainTopicService
     ) { }
 
     async crawlAndSaveTopics() {
-        const mainTopicdto = await this.topicservice.find();
-        
-        for (const mainTopic of mainTopicdto) {
+        const mainTopicdto = await this.maintopicservice.find();
 
-            const url = 'https://vnexpress.net'+mainTopic.link;
+        for await (const mainTopic of mainTopicdto) {
 
-            console.log("----------------", url)
+            const url = mainTopic.link;
+
+            console.log("----------", url, "-----------")
             try {
                 const response = await fetch(url);
                 const html = await response.text();
@@ -29,24 +29,20 @@ export class TopicService {
 
                 const topic = [];
 
-                $('.sub li ').each((_index, element) => {
+                $('.sub li a').each((_index, element) => {
 
-                    const name = $(element).find('a').text().replace(/\n\n+/g, '').trim();
-
-                    const link = url+$(element).find('a').attr('href').replace(/,/, '');
+                    const name = $(element).text().replace(/\n\n+/g, '').trim();
+                    const link = $(element).attr('href').replace(/,/, '');
 
                     console.log("???2", name, link)
 
-                    console.log(`----Đã crawl chủ đề con của ${mainTopic.name}------`);
+                    console.log(`Đã crawl chủ đề con của ${mainTopic.name} thành công`);
 
                     topic.push({ name, link, mainTopic: mainTopic._id });
                 });
 
-                const dto = await this.topicModel.insertMany(topic);
+                await this.topicModel.insertMany(topic)
 
-                console.log(dto)
-
-              
             } catch (error) {
                 console.error('Lỗi: ', error);
             }

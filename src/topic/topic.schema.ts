@@ -10,10 +10,9 @@ export class topics {
 
   @Prop()
   link: string;
-
-  // parentName: string;
+  
   @Prop({ type: Types.ObjectId, ref: 'mainTopics' })
-  topic: Types.ObjectId; // Sử dụng kiểu ObjectId cho trường 
+  topic: Types.ObjectId; // Sử dụng kiểu ObjectId cho trường dữ liệu 
 
 }
 

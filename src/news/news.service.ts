@@ -17,9 +17,9 @@ export class NewsService {
     async crawlAndSaveNews() {
         const topics = await this.topicService.find();
 
-        for (const topic of topics) {
+        for await (const topic of topics) {
             const url = topic.link;
-            console.log("???3")
+            console.log(url)
             try {
                 const response = await fetch(url);
                 const html = await response.text();
@@ -28,8 +28,8 @@ export class NewsService {
                 const newsList = [];
 
                 $('.thumb-art a').each((_index, element) => {
-                    const title = $(element).text().replace(/\n\n+/g, '').trim();;
-                    const link = $(element).attr('href').replace(/,/, '');;
+                    const title = $(element).text().replace(/\n\n+/g, '').trim();
+                    const link = $(element).attr('href').replace(/,/, '');
                     const createdAt = new Date();
 
                     console.log("???3", title,link)
@@ -41,9 +41,7 @@ export class NewsService {
                     });
                 });
 
-                const dto = await this.newsModel.insertMany(newsList);
-                
-                console.log(dto)
+                   await this.newsModel.insertMany(newsList);
 
                 console.log(`Đã crawl và lưu tin tức của chủ đề ${topic.name} thành công!`);
             } catch (error) {

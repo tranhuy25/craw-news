@@ -8,6 +8,6 @@ export class mainTopics {
 
   @Prop()
   link: string;
-
+  
 }
 export const MainTopicSchema = SchemaFactory.createForClass(mainTopics);
