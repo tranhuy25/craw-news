@@ -30,27 +30,47 @@ export class NewsService {
                 $('.item-news item-news-common thumb-left').each((_index, element) => {
                     const title = $(element).find('title-news').text().replace(/\n\n+/g, '').trim();
                     const link = $(element).find('thumb-art').attr('href').replace(/,/, '');
-                    const description = $(element).find('description').text().replace(/\n\n+/g, '').trim();
                     const createdAt = new Date();
 
                     console.log("???3", title,link)
                     newsList.push({
                         title,
                         link,
-                        description,
                         createdAt,
                         topic: topic._id, 
                     });
                 });
-                   await this.newsModel.insertMany(newsList);
+                   const dto =await this.newsModel.insertMany(newsList);
+
+                   console.log(">>>>>check>>>>>",dto)
+
+                   const newsLists = await this.newsModel.find().exec()
+
+                   for (const news of newsLists) {
+                       const url = news.link;
+
+                       const response = await fetch(url);
+                       const html = await response.text();
+                       const $ = cheerio.load(html);
+       
+                       const detailnew = [];
+       
+                       $('.container').each((_index, element) => {
+                           const content = $(element).find('.description').text().replace(/\n\n+/g, '').trim();
+                           const description = $(element).find('.fck_detail p Normal').text().replace(/\n\n+/g, '').trim();
+                           detailnew.push({ content, description });
+           
+                       });
+       
+                       await this.newsModel.insertMany(detailnew)
+       
+                       console.log(`Đã crawl và lưu chi tiết tin tức của thành công!`);
+                   }
 
                 console.log(`Đã crawl và lưu tin tức của chủ đề ${topic.name} thành công!`);
             } catch (error) {
                 console.error('Lỗi: ', error);
             }
         }
-    }
-    async find() {
-        return await this.newsModel.find().exec();
     }
 }
