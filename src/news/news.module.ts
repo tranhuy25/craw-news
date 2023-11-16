@@ -12,5 +12,6 @@ import { Topicmodule } from 'src/topic/topic.module';
     imports: [MongooseModule.forFeature([{ name: DB_NEW, schema: NewsSchema }]), Topicmodule],
     controllers: [NewsController],
     providers: [NewsService, CronJobService,],
+    exports:[NewsService],
 })
 export class NewsModule { }

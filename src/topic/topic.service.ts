@@ -49,7 +49,7 @@ export class TopicService {
         }
     }
     async find() {
-        return await this.topicModel.find().exec()
+        return await this.topicModel.find().exec();
     }
 }
 

@@ -11,6 +11,9 @@ export class news {
 
   @Prop()
   link:string;
+  
+  @Prop()
+  description:string;
 
   @Prop()
   createdAt: Date;

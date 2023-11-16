@@ -27,20 +27,21 @@ export class NewsService {
 
                 const newsList = [];
 
-                $('.thumb-art a').each((_index, element) => {
-                    const title = $(element).text().replace(/\n\n+/g, '').trim();
-                    const link = $(element).attr('href').replace(/,/, '');
+                $('.item-news item-news-common thumb-left').each((_index, element) => {
+                    const title = $(element).find('title-news').text().replace(/\n\n+/g, '').trim();
+                    const link = $(element).find('thumb-art').attr('href').replace(/,/, '');
+                    const description = $(element).find('description').text().replace(/\n\n+/g, '').trim();
                     const createdAt = new Date();
 
                     console.log("???3", title,link)
                     newsList.push({
                         title,
                         link,
+                        description,
                         createdAt,
                         topic: topic._id, 
                     });
                 });
-
                    await this.newsModel.insertMany(newsList);
 
                 console.log(`Đã crawl và lưu tin tức của chủ đề ${topic.name} thành công!`);
@@ -50,6 +51,6 @@ export class NewsService {
         }
     }
     async find() {
-        return await this.newsModel.find().exec()
+        return await this.newsModel.find().exec();
     }
 }

@@ -37,6 +37,6 @@ export class MainTopicService {
         }
     }
     async find() {
-        return await this.mainTopicModel.find().exec()
+        return await this.mainTopicModel.find().exec();
     }
 }
