@@ -21,6 +21,7 @@ export class NewsService {
             const url = topic.link;
             console.log(url)
             try {
+                
                 const response = await fetch(url);
                 const html = await response.text();
                 const $ = cheerio.load(html);
