@@ -10,28 +10,30 @@ import { DB_MAINTOPIC } from './constants';
 @Injectable()
 export class MainTopicService {
     constructor(@InjectModel(DB_MAINTOPIC) private readonly mainTopicModel: Model<mainTopics>) { }
-
     async crawlAndSaveMainTopics() {
         const url = 'https://vnexpress.net/';
-
         try {
             const response = await fetch(url);
             const html = await response.text();
             const $ = cheerio.load(html);
 
             const mainTopic = [];
-            $('.parent li a').each((_index, element) => {
-                const name = $(element).text().replace(/\n\n+/g, '').trim();
+            const dtoList = [
+                'https://video.vnexpress.net/?_gl=1*13hmc2*_gcl_au*MTY1NjAxOTE2MC4xNjk2NzgxNjYz',
+                'https://vnexpress.net/goc-nhin',
+                'https://vnexpress.nethttps://video.vnexpress.net'
+            ];
+            $('.main-nav .parent li').each((_index, element) => {
+                const name = $(element).find('a').text().replace(/\n\n+/g, '').trim();
                 const DtoLink = 'https://vnexpress.net';
-                const link = DtoLink+$(element).attr('href').replace(/,/, '');
+                const link = DtoLink+$(element).find('a').attr('href').replace(/,/, '');
 
-                console.log("???1",name,link)
-
-                mainTopic.push({ name, link });
-            });
-
-            await this.mainTopicModel.insertMany(mainTopic);
-            console.log('Đã crawl và lưu chủ đề lớn thành công!');
+                if (!dtoList.includes(link)) {
+                    console.log("???1", name, link);
+                    mainTopic.push({ name, link });
+                }
+                this.mainTopicModel.insertMany(mainTopic)
+            })
         } catch (error) {
             console.error('Lỗi: ', error);
         }

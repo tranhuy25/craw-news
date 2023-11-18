@@ -15,30 +15,28 @@ export class NewsService {
     ) { }
 
     async crawlAndSaveNews() {
-        const topics = await this.topicService.find();
+        const topicdto = await this.topicService.find();
 
-        for await (const topic of topics) {
+        for await (const topic of topicdto) {
             const url = topic.link;
-            console.log(url)
+
+            console.log("----------", url, "-----------")
+
             try {
-                
                 const response = await fetch(url);
                 const html = await response.text();
                 const $ = cheerio.load(html);
 
                 const newsList = [];
 
-                $('.item-news item-news-common thumb-left').each((_index, element) => {
-                    const title = $(element).find('title-news').text().replace(/\n\n+/g, '').trim();
-                    const link = $(element).find('thumb-art').attr('href').replace(/,/, '');
+                $('.item-news .thumb-art').each((_index, element) => {
+                    const link = $(element).find('a').attr('href').replace(/,/, '');
                     const createdAt = new Date();
 
-                    console.log("???3", title,link)
+                    console.log("???3",link)
                     newsList.push({
-                        title,
                         link,
                         createdAt,
-                        topic: topic._id, 
                     });
                 });
                    const dto =await this.newsModel.insertMany(newsList);
@@ -56,19 +54,16 @@ export class NewsService {
        
                        const detailnew = [];
        
-                       $('.container').each((_index, element) => {
-                           const content = $(element).find('.description').text().replace(/\n\n+/g, '').trim();
-                           const description = $(element).find('.fck_detail p Normal').text().replace(/\n\n+/g, '').trim();
-                           detailnew.push({ content, description });
-           
+                       $('.fck_detail .Normal').each((_index, element) => {
+                           const content = $(element).text().replace(/\n\n+/g, '').trim();
+                           const description = $(element).text().replace(/\n\n+/g, '').trim();
+                           detailnew.push({ content, description});          
                        });
        
-                       await this.newsModel.insertMany(detailnew)
-       
-                       console.log(`Đã crawl và lưu chi tiết tin tức của thành công!`);
+                       const dto = await this.newsModel.insertMany(detailnew)
+                       console.log(dto)
                    }
 
-                console.log(`Đã crawl và lưu tin tức của chủ đề ${topic.name} thành công!`);
             } catch (error) {
                 console.error('Lỗi: ', error);
             }

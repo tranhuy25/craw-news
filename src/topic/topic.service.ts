@@ -13,15 +13,11 @@ export class TopicService {
         @InjectModel(DB_TOPIC) private readonly topicModel: Model<topics>,
         private readonly maintopicservice: MainTopicService
     ) { }
-
     async crawlAndSaveTopics() {
         const mainTopicdto = await this.maintopicservice.find();
 
-        for await (const mainTopic of mainTopicdto) {
-
+        for (const mainTopic of mainTopicdto) {
             const url = mainTopic.link;
-
-            console.log("----------", url, "-----------")
             try {
                 const response = await fetch(url);
                 const html = await response.text();
@@ -29,11 +25,15 @@ export class TopicService {
 
                 const topic = [];
 
-                $('.sub li a').each((_index, element) => {
+                $('.ul-nav-folder li a').each((_index, element) => {
 
                     const name = $(element).text().replace(/\n\n+/g, '').trim();
-                    const link = $(element).attr('href').replace(/,/, '');
-
+                    let link = $(element).attr('href').replace(/,/, '');
+                    if(link.startsWith('https://vnexpress.net')){
+                        console.log(">>>>Check>>>",link)
+                    }else{
+                        link='https://vnexpress.net'+link;
+                    }
                     console.log("???2", name, link)
 
                     console.log(`Đã crawl chủ đề con của ${mainTopic.name} thành công`);
