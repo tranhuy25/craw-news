@@ -16,7 +16,7 @@ export class TopicService {
     async crawlAndSaveTopics() {
         const mainTopicdto = await this.maintopicservice.find();
 
-        for (const mainTopic of mainTopicdto) {
+        for await (const mainTopic of mainTopicdto) {
             const url = mainTopic.link;
             try {
                 const response = await fetch(url);

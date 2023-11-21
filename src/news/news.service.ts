@@ -41,11 +41,11 @@ export class NewsService {
                 });
                    const dto =await this.newsModel.insertMany(newsList);
 
-                   console.log(">>>>>check>>>>>",dto)
+                   console.log("-------->>>>>check>>>>>------------",dto)
 
                    const newsLists = await this.newsModel.find().exec()
 
-                   for (const news of newsLists) {
+                   for await (const news of newsLists) {
                        const url = news.link;
 
                        const response = await fetch(url);
@@ -56,8 +56,9 @@ export class NewsService {
        
                        $('.fck_detail .Normal').each((_index, element) => {
                            const content = $(element).text().replace(/\n\n+/g, '').trim();
+                           const  createdAt = new Date
                            const description = $(element).text().replace(/\n\n+/g, '').trim();
-                           detailnew.push({ content, description});          
+                           detailnew.push({ content, description,createdAt});          
                        });
        
                        const dto = await this.newsModel.insertMany(detailnew)
