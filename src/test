@@ -15,3 +15,16 @@
 
 //        redis : bo nho trong ram
 //        "khoa-nguoi-dung": "so-lan-dang-nhap-nguoi-dung",
+
+
+// git init 
+// git commit -m "fix"
+// git add .
+// git branch -M demo
+// git push origin demo 
+// Intruder : kẻ xâm nhập 
+
+// git checout demo : sang nhánh mới rồi git pull ( tức là ở
+//  đây nếu chạy trên unbutu thì sẽ mặc định là nhánh 
+// main mà mình đga lưu code vào nhánh demo)
+//  rm-rf là xoá file trong git 

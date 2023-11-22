@@ -11,4 +11,7 @@ export class NewsController {
         await this.newsService.crawlAndSaveNews();
         return { message: 'Crawl và lưu tin tức thành công!' };
     }
+//    @Post("test")
+        
+
 }

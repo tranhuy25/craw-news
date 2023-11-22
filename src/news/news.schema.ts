@@ -7,7 +7,7 @@ import { DB_NEW } from './constants';
 export class news {
 
   @Prop()
-  name: string;
+  title: string;
 
   @Prop()
   link:string;
@@ -16,10 +16,13 @@ export class news {
   description:string;
 
   @Prop()
-  createdAt: Date;
+  createdAt: string;
 
   @Prop()
   content: string;
+
+  @Prop()
+  thumbnail : string;
 
 }
 export const NewsSchema = SchemaFactory.createForClass(news);

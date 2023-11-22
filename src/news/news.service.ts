@@ -17,54 +17,42 @@ export class NewsService {
     async crawlAndSaveNews() {
         const topicdto = await this.topicService.find();
 
-        for await (const topic of topicdto) {
+        for (const topic of topicdto) {
             const url = topic.link;
-
-            console.log("----------", url, "-----------")
-
+            console.log(url)
             try {
                 const response = await fetch(url);
                 const html = await response.text();
                 const $ = cheerio.load(html);
 
                 const newsList = [];
-
-                $('.item-news .thumb-art').each((_index, element) => {
-                    const link = $(element).find('a').attr('href').replace(/,/, '');
-                    const createdAt = new Date();
-
-                    console.log("???3",link)
-                    newsList.push({
-                        link,
-                        createdAt,
-                    });
+                $('.list-news-subfolder .item-news').each((_index, element) => {
+                    const dto = $(element).find('.description a').first().attr();
+                    const description =$(element).find('p.description').text().replace(/\n\n+/g, '').trim();
+                    const link = dto.href
+                    const title = dto.title
+                    newsList.push({ title, link ,description}); 
                 });
-                   const dto =await this.newsModel.insertMany(newsList);
+                let newlistdto = await newsList.map(async newsItem => {
+                    const Url = newsItem.link;
+                    const response = await fetch(Url);
+                    const html = await response.text();
+                    const $ = cheerio.load(html);
+                    $('.page-detail .sidebar-1').each((_index, element) => {
 
-                   console.log("-------->>>>>check>>>>>------------",dto)
-
-                   const newsLists = await this.newsModel.find().exec()
-
-                   for await (const news of newsLists) {
-                       const url = news.link;
-
-                       const response = await fetch(url);
-                       const html = await response.text();
-                       const $ = cheerio.load(html);
-       
-                       const detailnew = [];
-       
-                       $('.fck_detail .Normal').each((_index, element) => {
-                           const content = $(element).text().replace(/\n\n+/g, '').trim();
-                           const  createdAt = new Date
-                           const description = $(element).text().replace(/\n\n+/g, '').trim();
-                           detailnew.push({ content, description,createdAt});          
-                       });
-       
-                       const dto = await this.newsModel.insertMany(detailnew)
-                       console.log(dto)
-                   }
-
+                        const Atl={
+                        thumbnail :$(element).find('.fck_detail .tplCaption img.lazy').attr('src'),
+                        content :$(element).find('.fck_detail p.Normal').text().replace(/\n\n+/g, '').trim(),
+                        createdAt : $(element).find('.header-content span.date').text().replace(/\n\n+/g, '').trim(),
+                      
+                        }
+                         newsItem= {...Atl,...newsItem}
+                    });
+                    return newsItem
+                });
+                 newlistdto=await Promise.all(newlistdto)
+                console.log("-------",newlistdto)
+                await this.newsModel.insertMany(newlistdto)
             } catch (error) {
                 console.error('Lỗi: ', error);
             }
