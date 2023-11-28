@@ -32,7 +32,15 @@ export class MainTopicService {
                     console.log("???1", name, link);
                     mainTopic.push({ name, link });
                 }
-                this.mainTopicModel.insertMany(mainTopic)
+                for (const item of mainTopic) {
+                    const existingLinks =  this.mainTopicModel.exists({ link: item.link });
+                    if (existingLinks) {
+                        console.log("Dữ liệu đã tồn tại ")
+                    }else {
+                         this.mainTopicModel.insertMany(mainTopic)
+                        console.log("Dữ liệu đã được lưu vào csdl")
+                    }
+                }               
             })
         } catch (error) {
             console.error('Lỗi: ', error);

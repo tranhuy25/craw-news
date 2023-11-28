@@ -1,4 +1,4 @@
-import { Controller, Get } from '@nestjs/common';
+import { Controller, Get, Post } from '@nestjs/common';
 import { MainTopicService } from './main-topic.service';
 
 @Controller('main-topics')
@@ -10,4 +10,8 @@ export class MainTopicController {
         await this.mainTopicService.crawlAndSaveMainTopics();
         return 'Crawl và lưu chủ đề lớn thành công!';
     }
+    // @Post("test")
+    // async testCrawl (){
+    //    return this.mainTopicService.getAll()
+    // }
 }

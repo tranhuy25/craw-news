@@ -1,5 +1,5 @@
 
-import { Controller, Get } from '@nestjs/common';
+import { Controller, Get, Post } from '@nestjs/common';
 import { TopicService } from './topic.service';
 
 @Controller('news')
@@ -11,4 +11,8 @@ export class TopicController {
         await this.topicService.crawlAndSaveTopics();
         return { message: 'Crawl và lưu tin tức thành công!' };
     }
+    // @Post("test")
+    // async testCrawl (){
+    //    return this.topicService.getAll()
+    // }
 }

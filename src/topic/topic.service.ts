@@ -24,7 +24,6 @@ export class TopicService {
                 const $ = cheerio.load(html);
 
                 const topic = [];
-
                 $('.ul-nav-folder li a').each((_index, element) => {
 
                     const name = $(element).text().replace(/\n\n+/g, '').trim();
@@ -38,11 +37,17 @@ export class TopicService {
 
                     console.log(`Đã crawl chủ đề con của ${mainTopic.name} thành công`);
 
-                    topic.push({ name, link, mainTopic: mainTopic._id });
+                    topic.push({ name, link });
                 });
-
-                await this.topicModel.insertMany(topic)
-
+                for (const item of topic) {
+                    const existingLinks = await this.topicModel.exists({ link: item.link });
+                    if (existingLinks) {
+                        console.log("Dữ liệu đã tồn tại")
+                    } else {
+                        await this.topicModel.insertMany(topic)
+                        console.log("Dữ liệu đã được lưu trong csdl")
+                    }
+                }               
             } catch (error) {
                 console.error('Lỗi: ', error);
             }
@@ -51,5 +56,8 @@ export class TopicService {
     async find() {
         return await this.topicModel.find().exec();
     }
+    // async getAll() {
+    //     return this.topicModel.find()
+    //  }
 }
 
