@@ -1,6 +1,7 @@
 
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { DB_NEW } from './constants';
+import { Date } from 'mongoose';
 
 @Schema({collection :DB_NEW})
 
@@ -15,8 +16,8 @@ export class news {
   @Prop()
   description:string;
 
-  @Prop()
-  createdAt: string;
+  @Prop({ type: Date }) 
+  createdAt: Date;
 
   @Prop()
   content: string;
