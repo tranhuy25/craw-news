@@ -6,19 +6,23 @@ import { ScheduleModule } from '@nestjs/schedule';
 import { Maintopicmodule } from './maintopic/main-topic.module';
 import { Topicmodule } from './topic/topic.module';
 import { NewsModule } from './news/news.module'
-import { ConfigModule } from '@nestjs/config';
-import { config } from 'dotenv';
+import { ConfigModule, ConfigService } from '@nestjs/config';
+import { config } from './config/configuration';
 
 @Module({
   imports: [ConfigModule.forRoot({
     isGlobal:true,
     load :[config],
   }),
-    MongooseModule.forRoot('mongodb://127.0.0.1:27017/tin_tuc'),
+  MongooseModule.forRootAsync({
+    inject:[ConfigService],
+    useFactory:async (configSecret:ConfigService) =>({
+      uri:configSecret.get('mongoUri'),
+    })
+  }),
     Maintopicmodule, Topicmodule,NewsModule,ScheduleModule.forRoot()],
   controllers: [AppController],
   providers: [AppService]
-
 })
 export class AppModule { }
 
