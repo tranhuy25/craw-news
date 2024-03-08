@@ -1,4 +1,3 @@
-
 import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
 import { TopicController } from './topic.controller';
@@ -11,9 +10,12 @@ import { DB_MAINTOPIC } from 'src/maintopic/constants';
 import { Maintopicmodule } from 'src/maintopic/main-topic.module';
 
 @Module({
-    imports: [MongooseModule.forFeature([{ name: DB_TOPIC, schema: TopicSchema }]), Maintopicmodule],
-    controllers: [TopicController],
-    providers: [TopicService,CronJobService,],
-    exports:[TopicService]
+  imports: [
+    MongooseModule.forFeature([{ name: DB_TOPIC, schema: TopicSchema }]),
+    Maintopicmodule,
+  ],
+  controllers: [TopicController],
+  providers: [TopicService, CronJobService],
+  exports: [TopicService],
 })
 export class Topicmodule {}
